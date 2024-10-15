@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Allow vertical stacking */
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center; /* Center the title */
+            margin-bottom: 20px; /* Space below the title */
+            color: #333; /* Text color */
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .chatbox {
+            flex-grow: 1;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .chatbox p {
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+        }
+
+        .bot-message {
+            background-color: #d1e7dd;
+            text-align: left;
+        }
+
+        .user-message {
+            background-color: #cfe2ff;
+            text-align: right;
+        }
+
+        input {
+            padding: 10px;
+            width: calc(100% - 20px);
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Text Emotion Detection Chatbot</h1> 
+    
+    <div class="chat-container">
+        <div class="chatbox" id="chatbox">
+            <!-- Messages will appear here -->
+        </div>
+        <input type="text" id="userInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const userMessage = userInput.value.trim();
+
+            if (userMessage !== "") {
+                displayMessage(userMessage, 'user-message');
+                generateBotResponse(userMessage);
+                userInput.value = ""; // Clear the input
+            }
+        }
+
+        function displayMessage(message, className) {
+            const messageElement = document.createElement('p');
+            messageElement.className = className;
+            messageElement.textContent = message;
+            chatbox.appendChild(messageElement);
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+        }
+
+        function generateBotResponse(userMessage) {
+            let botMessage;
+
+            // Detect emotion based on keywords in user input
+            const emotion = detectEmotion(userMessage.toLowerCase());
+
+            switch (emotion) {
+                case 'happy':
+                    botMessage = "😊 I'm glad to see you're happy!";
+                    break;
+                case 'sad':
+                    botMessage = "😢 I'm sorry to hear you're feeling sad. I'm here for you!";
+                    break;
+                case 'angry':
+                    botMessage = "😡 It seems like you're upset. Take a deep breath. How can I help?";
+                    break;
+                case 'neutral':
+                    botMessage = "🙂 I'm here to chat. What's on your mind?";
+                    break;
+                default:
+                    botMessage = "🤔 I'm not sure how you're feeling. Could you tell me more?";
+            }
+
+            // Display bot response after a short delay
+            setTimeout(() => displayMessage(botMessage, 'bot-message'), 500);
+        }
+
+        // Function to detect emotion based on user input
+        function detectEmotion(message) {
+            // Simple emotion detection logic based on keywords
+            const happyWords = ['happy', 'great', 'awesome', 'fantastic', 'joy'];
+            const sadWords = ['sad', 'down', 'unhappy', 'depressed'];
+            const angryWords = ['angry', 'mad', 'frustrated', 'furious'];
+
+            for (const word of happyWords) {
+                if (message.includes(word)) {
+                    return 'happy';
+                }
+            }
+
+            for (const word of sadWords) {
+                if (message.includes(word)) {
+                    return 'sad';
+                }
+            }
+
+            for (const word of angryWords) {
+                if (message.includes(word)) {
+                    return 'angry';
+                }
+            }
+
+            return 'neutral'; // Default emotion if none is detected
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+    background: #1180ab;
+    min-height: 100vh;
+    position: relative;
+    transition: background var(--all-transition);
+    overflow: hidden;
+}
+
+        .carousel {
+            height: 100vh;
+        }
+
+        header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 200;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.logo h1 {
+    font-size: 24px;
+    color: black;
+    margin: 0;
+}
+
+.nav-bar {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.nav-bar a:hover {
+    text-decoration: underline;
+}
+
+
+        .item .info-box {
+            position: absolute;
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 450px;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .item.active .info-box {
+            z-index: 2;
+        }
+
+        .info-box .info-slider {
+            height: inherit;
+        }
+
+        .info-slider .info-item {
+            height: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #fff;
+            transform: translateY(calc(var(--i) * 100%));
+        }
+
+        .info-item h2 {
+            font-size: 40px;
+            line-height: 1;
+        }
+
+        .info-item p {
+            font-size: 16px;
+            margin: 15px 0 20px;
+        }
+
+        .info-item .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 180px;
+            height: 48px;
+            background: transparent;
+            border: 2px solid #fff;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .item .img-box {
+            position: absolute;
+            left: 35%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 800px;
+            height: 700px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .img-box .img-slider {
+            width: inherit;
+            height: inherit;
+            transition: .5s ease;
+        }
+
+        .img-slider .img-item {
+            width: inherit;
+            height: inherit;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(calc(var(--i) * 100%));
+        }
+
+        .img-item img {
+            pointer-events: none;
+            filter: drop-shadow(0 0 0px rgba(0, 0, 0, .2));
+            transform: scale(0);
+        }
+
+        .item.active .img-item img {
+            transform: scale(1);
+            transition: .5s ease;
+        }
+
+        .thumb {
+            position: absolute;
+            right: 5%;
+            top: 55%;
+            transform: translateY(-50%);
+            list-style: none;
+        }
+
+        .thumb li {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            cursor: pointer;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .thumb li.selected {
+            border: 3px solid #fff;
+        }
+
+        .thumb li img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item .bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: .2s;
+        }
+
+        .item.active .bg {
+            opacity: 1;
+        }
+
+        .item .bg::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, .8);
+            border-radius: 50%;
+            filter: blur(200px);
+        }
+
+        .item:nth-child(1) .bg {
+            background: #1180ab;
+        }
+
+        .item:nth-child(2) .bg {
+            background: #ab1111;
+        }
+
+        .item:nth-child(3) .bg {
+            background: #531b9d;
+        }
+
+        .item:nth-child(4) .bg {
+            background: #a59d00;
+        }
+
+        .item:nth-child(5) .bg {
+            background: #037210;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="logo.png">
+            <h1>Text Based Emotion Detection System</h1>
+        </div>
+        <nav class="nav-bar">
+            <a href="home.html">Home |</a>
+            <a href="signup.html">Sign Up |</a>
+            <a href="signin.html">Sign In |</a>
+            <a href="Chatbot.html">Chatbot |</a>
+            <a href="Explore idea.html">Exploreidea |</a>
+        </nav>
+    </header>
+
+    <div class="carousel">
+        <div class="item active">
+            <div class="bg"></div>
+            <div class="info-box">
+                <div class="info-slider">
+                    <div class="info-item" style="--i:0;">
+                        <h2>Stormrunner</h2>
+                        <p>Lorean ipsum dolor sit amet consectetur adipisicing elit. corrupti, odio unde, dignissimos totam exercitationem nobis, vitae omnis eveniet quod deleniti explicabo rem ut.</p>
+                        <a href="#" class="btn">View More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="img-box">
+                <div class="img-slider">
+                    <div class="img-item" style="--i:0;">
+                        <img src="image1.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="bg"></div>
+            <div class="info-box">
+                <div class="info-slider">
+                    <div class="info-item" style="--i:1;">
+                        <h2>Dropsight</h2>
+                        <p>Lorean ipsum dolor sit amet consectetur adipisicing elit. corrupti, odio unde, dignissimos totam exercitationem nobis, vitae omnis eveniet quod deleniti explicabo rem ut.</p>
+                        <a href="#" class="btn">View More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="img-box">
+                <div class="img-slider">
+                    <div class="img-item" style="--i:1;">
+                        <img src="image2.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="bg"></div>
+            <div class="info-box">
+                <div class="info-slider">
+                    <div class="info-item" style="--i:2;">
+                        <h2>Riot</h2>
+                        <p>Lorean ipsum dolor sit amet consectetur adipisicing elit. corrupti, odio unde, dignissimos totam exercitationem nobis, vitae omnis eveniet quod deleniti explicabo rem ut.</p>
+                        <a href="#" class="btn">View More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="img-box">
+                <div class="img-slider">
+                    <div class="img-item" style="--i:2;">
+                        <img src="image3.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="bg"></div>
+            <div class="info-box">
+                <div class="info-slider">
+                    <div class="info-item" style="--i:3;">
+                        <h2>Sunblast</h2>
+                        <p>Lorean ipsum dolor sit amet consectetur adipisicing elit. corrupti, odio unde, dignissimos totam exercitationem nobis, vitae omnis eveniet quod deleniti explicabo rem ut.</p>
+                        <a href="#" class="btn">View More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="img-box">
+                <div class="img-slider">
+                    <div class="img-item" style="--i:3;">
+                        <img src="image4.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="bg"></div>
+            <div class="info-box">
+                <div class="info-slider">
+                    <div class="info-item" style="--i:4;">
+                        <h2>Breakclash</h2>
+                        <p>Lorean ipsum dolor sit amet consectetur adipisicing elit. corrupti, odio unde, dignissimos totam exercitationem nobis, vitae omnis eveniet quod deleniti explicabo rem ut.</p>
+                        <a href="#" class="btn">View More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="img-box">
+                <div class="img-slider">
+                    <div class="img-item" style="--i:4;">
+                        <img src="image5.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="thumb">
+            <li class="selected"><img src="image1.png"></li>
+            <li><img src="image2.png"></li>
+            <li><img src="image3.png"></li>
+            <li><img src="image4.png"></li>
+            <li><img src="image5.png"></li>
+        </ul>
+    </div>
+
+    <script>
+        const thumbs = document.querySelectorAll('.thumb li');
+        const infoSliders = document.querySelectorAll('.info-slider');
+        const imgSliders = document.querySelectorAll('.img-slider');
+        const items = document.querySelectorAll('.item');
+
+        let index = 0;
+        let autoSlide = true;
+
+        const changeSlide = (ind) => {
+            document.querySelector('.thumb .selected').classList.remove('selected');
+            thumbs[ind].classList.add('selected');
+
+            infoSliders.forEach(slide => {
+                    slide.style.transform = `translateY(${index * -100}%)`;
+                });
+                imgSliders.forEach(slide => {
+                    slide.style.transform = `translateX(${index * -100}%)`;
+                });
+
+                document.querySelector('.item.active').classList.remove('active');
+                items[ind].classList.add('active');
+        };
+
+        const nextSlide = () => {
+            index = (index + 1)% items.length;
+            changeSlide(index);
+        };
+
+        let slideInterval = setInterval(nextSlide,3000);
+
+        thumbs.forEach((thumb, ind) => {
+            thumb.addEventListener('click',() => {
+                clearInterval(slideInterval);
+                changeSlide(ind);
+                index = ind;
+                slideInterval = setInterval(nextSlide,3000);
+            }); 
+        });
+    </script>
+</body>
+
+</html>

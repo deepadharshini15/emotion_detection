@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection System with Graph</title>
+    <style> 
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #6a308b;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6832b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .emoji {
+            font-size: 2em;
+            vertical-align: middle;
+        }
+        #emotionChart {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .expression {
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <h1>Text-Based Emotion Detection System</h1>
+
+    <textarea id="textInput" rows="5" placeholder="Enter text to detect emotion"></textarea><br>
+    <button onclick="detectEmotion()">Detect Emotion</button>
+
+    <div class="result" id="emotionResult"></div>
+    <div class="expression" id="emotionExpression"></div>
+
+    <!-- Canvas element for the chart -->
+    <canvas id="emotionChart"></canvas>
+
+    <script>
+        // Initialize the chart
+        let emotionChart = null;
+
+        // Emotion expressions
+        const emotionExpressions = {
+            happy: "Joyful<br>Bursting with laughter, bright like the sun.<br>Heart dancing freely, all burdens undone.",
+            sad: "Sadness<br>Tears like raindrops, heavy and slow.<br>A heart wrapped in shadows, longing to glow.",
+            angry: "Anger<br>Fire igniting, a storm in my chest.<br>Words like thunder, restless and distressed.",
+            fear: "Fear<br>Chilled to the bone, shadows draw near.<br>Heart racing wildly, lost in the fear.",
+            surprised: "Surprise<br>Eyes wide open, breath caught in awe.<br>A twist in the tale, defying the law.",
+            love: "Love<br>Hearts intertwined, a gentle embrace.<br>Warmth in each glance, time slows its pace.",
+            disgust: "Disgust<br>A shudder within, repulsion so clear.<br>Turning away from what I hold dear.",
+            hope: "Hope<br>A flicker of light in the darkest of nights.<br>Dreams take flight, soaring to new heights.",
+            confusion: "Confusion<br>A tangled web of thoughts, lost in the maze.<br>Searching for clarity in this hazy haze.",
+            pride: "Pride<br>Standing tall, a heart full of grace.<br>Achievements like stars, lighting my space.",
+            neutral: "Neutral<br>No strong feelings, just calm and collected."
+        };
+
+        function detectEmotion() {
+            const text = document.getElementById('textInput').value.toLowerCase();
+            let emotionScores = {
+                happy: 0,
+                sad: 0,
+                angry: 0,
+                fear: 0,
+                surprised: 0,
+                disgust: 0,
+                neutral: 0
+            };
+
+            // Emotion keywords for different categories
+            const emotionKeywords = {
+                happy: ["happy", "joy", "excited", "pleased", "thrilled", "content", "glad"],
+                sad: ["sad", "down", "unhappy", "depressed", "cry", "heartbroken"],
+                angry: ["angry", "mad", "furious", "rage", "annoyed", "irritated"],
+                fear: ["scared", "afraid", "fear", "terrified", "frightened"],
+                surprised: ["surprised", "shocked", "amazed", "astonished", "startled"],
+                disgust: ["disgusted", "repulsed", "revolted", "gross", "nauseated"]
+            };
+
+            // Emojis corresponding to emotions
+            const emotionEmojis = {
+                happy: "😊",
+                sad: "😢",
+                angry: "😡",
+                fear: "😨",
+                surprised: "😲",
+                disgust: "🤢",
+                neutral: "😐"
+            };
+
+            // Check for keywords and update emotion scores
+            let totalKeywords = 0;  // To calculate confidence score
+            for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
+                keywords.forEach(keyword => {
+                    if (text.includes(keyword)) {
+                        emotionScores[emotion] += 1; // Increment score for each match
+                        totalKeywords += 1; // Track total keyword matches
+                    }
+                });
+            }
+
+            // Determine the emotion with the highest score
+            let detectedEmotion = "neutral";
+            let maxScore = 0;
+
+            for (const [emotion, score] of Object.entries(emotionScores)) {
+                if (score > maxScore) {
+                    maxScore = score;
+                    detectedEmotion = emotion;
+                }
+            }
+
+            // If no keywords were found, default to neutral
+            if (maxScore === 0) {
+                detectedEmotion = "neutral";
+            }
+
+            // Calculate the confidence as a value between 0.0 and 1.0
+            let confidence = totalKeywords > 0 ? (maxScore / totalKeywords) : 0;
+
+            // Display the detected emotion, its confidence value, and an emoji
+            document.getElementById('emotionResult').innerHTML = 
+                "Detected Emotion: " + detectedEmotion.charAt(0).toUpperCase() + detectedEmotion.slice(1) + 
+                " " + "<span class='emoji'>" + emotionEmojis[detectedEmotion] + "</span><br>" +
+                "Confidence: " + confidence.toFixed(2) + "<br>"; // Display confidence as a decimal
+
+            // Display the corresponding expression for the detected emotion
+            document.getElementById('emotionExpression').innerHTML = emotionExpressions[detectedEmotion];
+
+            // Prepare the data for the chart
+            const chartData = {
+                labels: Object.keys(emotionScores),
+                datasets: [{
+                    label: 'Emotion Scores',
+                    data: Object.values(emotionScores),
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',  // Happy
+                        'rgba(54, 162, 235, 0.2)',  // Sad
+                        'rgba(255, 99, 132, 0.2)',  // Angry
+                        'rgba(255, 206, 86, 0.2)',  // Fear
+                        'rgba(153, 102, 255, 0.2)', // Surprised
+                        'rgba(255, 159, 64, 0.2)',  // Disgust
+                        'rgba(201, 203, 207, 0.2)'  // Neutral
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(201, 203, 207, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            // Update or create the chart
+            if (emotionChart) {
+                emotionChart.data = chartData;
+                emotionChart.update();
+            } else {
+                emotionChart = new Chart(document.getElementById('emotionChart'), {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Text-Based Emotion Detection System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('call.PNG'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: right;
+            padding-right: 100px;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            animation: fadeIn 1s ease-in;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            color: #6a11cb;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subheading {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-left: 40px; /* Space for the icon */
+            margin-bottom: 8px; /* Space between label and input */
+            font-weight: 600;
+            width: 100%; /* Full width */
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            color: #6a11cb;
+            font-size: 18px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"] {
+            width: 100%; /* Full width */
+            padding: 14px 14px 14px 40px; /* Adjusted for icon and padding */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #6a11cb;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 24px;
+            width: 50%;
+            margin: 0 auto;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: scale(1.02);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .error {
+            color: #e53935;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            input,
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text-Based Emotion Detection System</h1>
+        <p class="subheading">Sign up to access the system</p>
+        <form id="signupForm" method="POST" action="/signup">
+            <div class="input-group">
+                <label for="username">
+                    <i class="fas fa-user"></i>
+                    Username
+                </label>
+                <input type="text" id="username" name="username" required>
+                <div id="usernameError" class="error"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="email">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </label>
+                <input type="email" id="email" name="email" required>
+                <div id="emailError" class="error"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="phone">
+                    <i class="fas fa-phone"></i>
+                    Phone
+                </label>
+                <input type="tel" id="phone" name="phone" maxlength="10" required>
+                <div id="phoneError" class="error"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                    Password
+                </label>
+                <input type="password" id="password" name="password" required>
+                <div id="passwordError" class="error"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmPassword">
+                    <i class="fas fa-lock"></i>
+                    Confirm Password
+                </label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div id="confirmPasswordError" class="error"></div>
+            </div>
+
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript form validation and submission (kept unchanged from your original script)
+        function getStoredUserData() {
+            return JSON.parse(localStorage.getItem('userData')) || {};
+        }
+
+        function storeUserData(userData) {
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(errorDiv => errorDiv.textContent = '');
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            let phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            let hasError = false;
+            const userData = getStoredUserData();
+
+            // Username validation
+            if (!/^[a-zA-Z]{4,12}$/.test(username)) {
+                document.getElementById('usernameError').textContent = 'Username must be 4-12 alphabetic characters only.';
+                hasError = true;
+            } else if (userData[username]) {
+                document.getElementById('usernameError').textContent = 'Username is already taken. Please choose another one.';
+                hasError = true;
+            }
+
+            // Email validation
+            if (!/^[\w._%+-]+@gmail\.com$/.test(email)) {
+                document.getElementById('emailError').textContent = 'Valid Email address (e.g., example@gmail.com).';
+                hasError = true;
+            } else if (Object.values(userData).some(user => user.email === email)) {
+                document.getElementById('emailError').textContent = 'Email is already taken. Please choose another one.';
+                hasError = true;
+            }
+
+            // Phone validation
+            phone = phone.replace(/\D/g, ''); // Remove non-digit characters
+            if (phone.length !== 10) {
+                document.getElementById('phoneError').textContent = 'Phone number must be 10 digits.';
+                hasError = true;
+            } else if (Object.values(userData).some(user => user.phone === '+91' + phone)) {
+                document.getElementById('phoneError').textContent = 'Phone number is already taken. Please choose another one.';
+                hasError = true;
+            } else {
+                phone = '+91' + phone;
+            }
+
+            // Password validation
+            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a digit, and a special character.';
+                hasError = true;
+            }
+
+            // Confirm Password validation
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Store new user data
+            userData[username] = { email, phone, password };
+            storeUserData(userData);
+
+            // Show success message and redirect
+            alert('Signup successful! Please sign in.');
+            setTimeout(() => {
+                window.location.href = 'signin.html'; // Redirect to the sign-in page
+            }, 500); // Slight delay to allow the alert to be seen
+        });
+    </script>
+</body>
+</html>
